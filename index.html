@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matheus Augustin | Soluções em Eletromobilidade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #00a1ff;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Animado */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            z-index: -1;
+        }
+
+        .glow-circle {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(100%, 50%); }
+        }
+
+        /* Layout */
+        header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        /* Serviços */
+        .services {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--glass);
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow">
+        <div class="glow-circle"></div>
+    </div>
+
+    <header>
+        <div class="logo">AGUSTINi<span>.EVS</span></div>
+        <nav>
+            <a href="https://wa.me/seu-numero" class="btn" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Contato</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Energia para o seu Amanhã.</h1>
+        <p>Instalação profissional de carregadores para veículos elétricos. Segurança, eficiência e a tecnologia que seu novo carro exige.</p>
+        <a href="#contato" class="btn">Solicitar Orçamento com Matheus</a>
+    </section>
+
+    <section class="services">
+        <div class="card">
+            <h3>Instalação Residencial</h3>
+            <p>Adequação completa da sua garagem para carregar seu veículo com segurança máxima durante a noite.</p>
+        </div>
+        <div class="card">
+            <h3>Soluções Corporativas</h3>
+            <p>Infraestrutura de carregamento para frotas e estacionamentos de empresas com gestão de energia.</p>
+        </div>
+        <div class="card">
+            <h3>Manutenção e Consultoria</h3>
+            <p>Análise de carga, aumento de potência e manutenção preventiva do seu sistema de carregamento.</p>
+        </div>
+    </section>
+
+    <footer id="contato">
+        <p>&copy; 2024 Matheus Augustin - Especialista em Instalações EV</p>
+        <p style="margin-top: 10px;">Transformando a mobilidade, um carregador por vez.</p>
+    </footer>
+
+    <script>
+        // Pequena animação no scroll
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const speed = 0.05;
+                const rect = card.getBoundingClientRect();
+                if(rect.top < window.innerHeight) {
+                    card.style.transform = `translateY(${(rect.top - window.innerHeight) * speed}px)`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
