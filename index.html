@@ -3,214 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matheus Augustin | Soluções em Eletromobilidade</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>VoltCharge | Carregamento Inteligente</title>
     <style>
         :root {
             --primary: #00ff88;
-            --secondary: #00a1ff;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.05);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
+            --secondary: #121212;
+            --text: #ffffff;
+            --card-bg: #1e1e1e;
         }
 
         body {
-            background-color: var(--dark);
-            color: var(--light);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Background Animado */
-        .bg-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-            z-index: -1;
-        }
-
-        .glow-circle {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: var(--primary);
-            filter: blur(150px);
-            opacity: 0.1;
-            border-radius: 50%;
-            animation: move 20s infinite alternate;
-        }
-
-        @keyframes move {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(100%, 50%); }
-        }
-
-        /* Layout */
-        header {
-            padding: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
-        }
-
-        .logo span {
-            color: var(--primary);
-        }
-
-        .hero {
-            height: 80vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 2rem 0;
             text-align: center;
-            padding: 0 1rem;
+            background: linear-gradient(180deg, #1a1a1a 0%, #121212 100%);
         }
 
-        h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 2rem auto;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            max-width: 600px;
-            margin-bottom: 2rem;
-        }
+        h1 { color: var(--primary); margin-bottom: 0.5rem; }
+        p { color: #aaa; }
 
-        .btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: var(--dark);
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
-        }
-
-        /* Serviços */
-        .services {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--glass);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Estilo da Calculadora */
+        .calc-card {
+            background: var(--card-bg);
             padding: 2rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
         }
 
-        .card:hover {
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #2a2a2a;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.08);
         }
 
-        .card h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
+        .result-area {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            text-align: center;
         }
+
+        .time-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-box {
+            background: #252525;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .highlight { color: var(--primary); font-weight: bold; }
 
         footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            border-top: 1px solid var(--glass);
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
+            margin-top: 3rem;
+            padding: 2rem;
+            font-size: 0.8rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="bg-glow">
-        <div class="glow-circle"></div>
-    </div>
 
     <header>
-        <div class="logo">AGUSTINi<span>.EVS</span></div>
-        <nav>
-            <a href="https://wa.me/seu-numero" class="btn" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Contato</a>
-        </nav>
+        <h1>VoltCharge</h1>
+        <p>Soluções de carregamento para o futuro da mobilidade.</p>
     </header>
 
-    <section class="hero">
-        <h1>Energia para o seu Amanhã.</h1>
-        <p>Instalação profissional de carregadores para veículos elétricos. Segurança, eficiência e a tecnologia que seu novo carro exige.</p>
-        <a href="#contato" class="btn">Solicitar Orçamento com Matheus</a>
-    </section>
+    <div class="container">
+        <div class="calc-card">
+            <h3>Calculadora de Tempo de Recarga</h3>
+            <p>Planeje sua viagem calculando quanto tempo seu veículo levará para atingir a carga desejada.</p>
+            
+            <div class="input-group">
+                <label>Capacidade da Bateria (kWh)</label>
+                <input type="number" id="batterySize" placeholder="Ex: 75" value="60">
+            </div>
 
-    <section class="services">
-        <div class="card">
-            <h3>Instalação Residencial</h3>
-            <p>Adequação completa da sua garagem para carregar seu veículo com segurança máxima durante a noite.</p>
-        </div>
-        <div class="card">
-            <h3>Soluções Corporativas</h3>
-            <p>Infraestrutura de carregamento para frotas e estacionamentos de empresas com gestão de energia.</p>
-        </div>
-        <div class="card">
-            <h3>Manutenção e Consultoria</h3>
-            <p>Análise de carga, aumento de potência e manutenção preventiva do seu sistema de carregamento.</p>
-        </div>
-    </section>
+            <div class="input-group">
+                <label>Potência do Carregador (kW)</label>
+                <select id="chargerPower">
+                    <option value="3.7">Tomada Comum (3.7 kW)</option>
+                    <option value="7.4" selected>Wallbox Residencial (7.4 kW)</option>
+                    <option value="11">Wallbox Comercial (11 kW)</option>
+                    <option value="22">Semi-rápido (22 kW)</option>
+                    <option value="50">Rápido DC (50 kW)</option>
+                    <option value="150">Ultra-rápido (150 kW)</option>
+                </select>
+            </div>
 
-    <footer id="contato">
-        <p>&copy; 2024 Matheus Augustin - Especialista em Instalações EV</p>
-        <p style="margin-top: 10px;">Transformando a mobilidade, um carregador por vez.</p>
+            <div style="display: flex; gap: 20px;">
+                <div class="input-group" style="flex: 1;">
+                    <label>Carga Atual (%)</label>
+                    <input type="number" id="currentCharge" value="20" min="0" max="100">
+                </div>
+                <div class="input-group" style="flex: 1;">
+                    <label>Carga Desejada (%)</label>
+                    <input type="number" id="targetCharge" value="80" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="result-area">
+                <span>Tempo estimado de carga:</span>
+                <div class="time-display" id="timeResult">0h 0m</div>
+                
+                <div class="stats">
+                    <div class="stat-box">
+                        <small>Energia a adicionar</small><br>
+                        <span id="energyNeeded" class="highlight">0</span> kWh
+                    </div>
+                    <div class="stat-box">
+                        <small>Eficiência estimada</small><br>
+                        <span class="highlight">90%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 VoltCharge - Tecnologia em Mobilidade Elétrica.
     </footer>
 
     <script>
-        // Pequena animação no scroll
-        window.addEventListener('scroll', () => {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                const speed = 0.05;
-                const rect = card.getBoundingClientRect();
-                if(rect.top < window.innerHeight) {
-                    card.style.transform = `translateY(${(rect.top - window.innerHeight) * speed}px)`;
-                }
-            });
+        function calculateCharge() {
+            const batterySize = parseFloat(document.getElementById('batterySize').value);
+            const chargerPower = parseFloat(document.getElementById('chargerPower').value);
+            const currentCharge = parseFloat(document.getElementById('currentCharge').value);
+            const targetCharge = parseFloat(document.getElementById('targetCharge').value);
+
+            if (targetCharge <= currentCharge) {
+                document.getElementById('timeResult').innerText = "0h 0m";
+                document.getElementById('energyNeeded').innerText = "0";
+                return;
+            }
+
+            // Cálculo da energia necessária (kWh)
+            const energyNeeded = (batterySize * (targetCharge - currentCharge)) / 100;
+            
+            // Estimativa de tempo considerando 10% de perda de eficiência (comum em recargas)
+            const efficiency = 0.9;
+            const effectivePower = chargerPower * efficiency;
+            const hours = energyNeeded / effectivePower;
+
+            const h = Math.floor(hours);
+            const m = Math.round((hours - h) * 60);
+
+            // Atualiza o display
+            document.getElementById('timeResult').innerText = `${h}h ${m}m`;
+            document.getElementById('energyNeeded').innerText = energyNeeded.toFixed(1);
+        }
+
+        // Adiciona ouvintes de eventos para atualizar em tempo real
+        const inputs = ['batterySize', 'chargerPower', 'currentCharge', 'targetCharge'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateCharge);
         });
+
+        // Cálculo inicial
+        calculateCharge();
     </script>
 </body>
 </html>
