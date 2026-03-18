@@ -2,215 +2,98 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoltCharge | Carregamento Inteligente</title>
+    <title>Simulador de Carregador OCPP 1.6J</title>
     <style>
-        :root {
-            --primary: #00ff88;
-            --secondary: #121212;
-            --text: #ffffff;
-            --card-bg: #1e1e1e;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--secondary);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        header {
-            width: 100%;
-            padding: 2rem 0;
-            text-align: center;
-            background: linear-gradient(180deg, #1a1a1a 0%, #121212 100%);
-        }
-
-        .container {
-            max-width: 800px;
-            width: 90%;
-            margin: 2rem auto;
-        }
-
-        h1 { color: var(--primary); margin-bottom: 0.5rem; }
-        p { color: #aaa; }
-
-        /* Estilo da Calculadora */
-        .calc-card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #333;
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            background: #2a2a2a;
-            color: white;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .result-area {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #333;
-            text-align: center;
-        }
-
-        .time-display {
-            font-size: 3rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 1rem 0;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .stat-box {
-            background: #252525;
-            padding: 1rem;
-            border-radius: 8px;
-        }
-
-        .highlight { color: var(--primary); font-weight: bold; }
-
-        footer {
-            margin-top: 3rem;
-            padding: 2rem;
-            font-size: 0.8rem;
-            color: #666;
-        }
+        body { font-family: sans-serif; background: #1a1a1a; color: #eee; padding: 20px; }
+        .card { background: #2a2a2a; border-radius: 8px; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #444; }
+        input { width: 70%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #555; background: #333; color: white; }
+        button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; margin: 2px; }
+        .btn-conn { background: #007bff; color: white; }
+        .btn-action { background: #28a745; color: white; }
+        #log { background: #000; color: #00ff00; padding: 10px; height: 250px; overflow-y: auto; margin-top: 20px; font-family: monospace; font-size: 12px; border: 1px solid #444; }
+        .status { margin-bottom: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>VoltCharge</h1>
-        <p>Soluções de carregamento para o futuro da mobilidade.</p>
-    </header>
+<div class="card">
+    <h2>Simulador de Carregador</h2>
+    
+    <div class="status">Status: <span id="connStatus" style="color: red;">Desconectado</span></div>
 
-    <div class="container">
-        <div class="calc-card">
-            <h3>Calculadora de Tempo de Recarga</h3>
-            <p>Planeje sua viagem calculando quanto tempo seu veículo levará para atingir a carga desejada.</p>
-            
-            <div class="input-group">
-                <label>Capacidade da Bateria (kWh)</label>
-                <input type="number" id="batterySize" placeholder="Ex: 75" value="60">
-            </div>
+    <input type="text" id="wsUrl" placeholder="ws://://seu-backend.com" value="wss://echo.websocket.org">
+    <button class="btn-conn" onclick="conectar()">Conectar</button>
+    
+    <hr style="border: 0.5px solid #444; margin: 20px 0;">
 
-            <div class="input-group">
-                <label>Potência do Carregador (kW)</label>
-                <select id="chargerPower">
-                    <option value="3.7">Tomada Comum (3.7 kW)</option>
-                    <option value="7.4" selected>Wallbox Residencial (7.4 kW)</option>
-                    <option value="11">Wallbox Comercial (11 kW)</option>
-                    <option value="22">Semi-rápido (22 kW)</option>
-                    <option value="50">Rápido DC (50 kW)</option>
-                    <option value="150">Ultra-rápido (150 kW)</option>
-                </select>
-            </div>
-
-            <div style="display: flex; gap: 20px;">
-                <div class="input-group" style="flex: 1;">
-                    <label>Carga Atual (%)</label>
-                    <input type="number" id="currentCharge" value="20" min="0" max="100">
-                </div>
-                <div class="input-group" style="flex: 1;">
-                    <label>Carga Desejada (%)</label>
-                    <input type="number" id="targetCharge" value="80" min="0" max="100">
-                </div>
-            </div>
-
-            <div class="result-area">
-                <span>Tempo estimado de carga:</span>
-                <div class="time-display" id="timeResult">0h 0m</div>
-                
-                <div class="stats">
-                    <div class="stat-box">
-                        <small>Energia a adicionar</small><br>
-                        <span id="energyNeeded" class="highlight">0</span> kWh
-                    </div>
-                    <div class="stat-box">
-                        <small>Eficiência estimada</small><br>
-                        <span class="highlight">90%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div>
+        <button class="btn-action" onclick="enviarBoot()">BootNotification</button>
+        <button class="btn-action" onclick="enviarStatus()">StatusNotification (Available)</button>
+        <button class="btn-action" onclick="enviarStart()">StartTransaction</button>
+        <button class="btn-action" onclick="enviarStop()">StopTransaction</button>
     </div>
 
-    <footer>
-        &copy; 2026 VoltCharge - Tecnologia em Mobilidade Elétrica.
-    </footer>
+    <div id="log"></div>
+</div>
 
-    <script>
-        function calculateCharge() {
-            const batterySize = parseFloat(document.getElementById('batterySize').value);
-            const chargerPower = parseFloat(document.getElementById('chargerPower').value);
-            const currentCharge = parseFloat(document.getElementById('currentCharge').value);
-            const targetCharge = parseFloat(document.getElementById('targetCharge').value);
+<script>
+    let ws = null;
+    const logDiv = document.getElementById('log');
 
-            if (targetCharge <= currentCharge) {
-                document.getElementById('timeResult').innerText = "0h 0m";
-                document.getElementById('energyNeeded').innerText = "0";
-                return;
-            }
+    function log(msg, type) {
+        const time = new Date().toLocaleTimeString();
+        const color = type === 'sent' ? '#00ff00' : '#00bfff';
+        logDiv.innerHTML += `<div style="color:${color}">[${time}] ${type.toUpperCase()}: ${msg}</div>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
 
-            // Cálculo da energia necessária (kWh)
-            const energyNeeded = (batterySize * (targetCharge - currentCharge)) / 100;
-            
-            // Estimativa de tempo considerando 10% de perda de eficiência (comum em recargas)
-            const efficiency = 0.9;
-            const effectivePower = chargerPower * efficiency;
-            const hours = energyNeeded / effectivePower;
+    function conectar() {
+        const url = document.getElementById('wsUrl').value;
+        // O sub-protocolo 'ocpp1.6' é obrigatório para a maioria dos backends
+        ws = new WebSocket(url, ['ocpp1.6']);
 
-            const h = Math.floor(hours);
-            const m = Math.round((hours - h) * 60);
+        ws.onopen = () => {
+            document.getElementById('connStatus').innerText = "Conectado";
+            document.getElementById('connStatus').style.color = "lightgreen";
+            log("Conexão estabelecida com o servidor.", "info");
+        };
 
-            // Atualiza o display
-            document.getElementById('timeResult').innerText = `${h}h ${m}m`;
-            document.getElementById('energyNeeded').innerText = energyNeeded.toFixed(1);
-        }
+        ws.onmessage = (msg) => log(msg.data, "recebido");
+        ws.onerror = (e) => log("Erro na conexão WebSocket", "erro");
+        ws.onclose = () => {
+            document.getElementById('connStatus').innerText = "Desconectado";
+            document.getElementById('connStatus').style.color = "red";
+        };
+    }
 
-        // Adiciona ouvintes de eventos para atualizar em tempo real
-        const inputs = ['batterySize', 'chargerPower', 'currentCharge', 'targetCharge'];
-        inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', calculateCharge);
-        });
+    function send(action, payload) {
+        if(!ws || ws.readyState !== WebSocket.OPEN) return alert("Conecte ao servidor primeiro!");
+        
+        // Estrutura Padrão OCPP: [MessageTypeId, MessageId, Action, Payload]
+        const msgId = Math.random().toString(36).substr(2, 9);
+        const call = JSON.stringify([2, msgId, action, payload]);
+        
+        ws.send(call);
+        log(call, "sent");
+    }
 
-        // Cálculo inicial
-        calculateCharge();
-    </script>
+    // Comandos OCPP 1.6
+    function enviarBoot() {
+        send("BootNotification", { chargePointVendor: "MinhaMarca", chargePointModel: "Modelo-HTML" });
+    }
+
+    function enviarStatus() {
+        send("StatusNotification", { connectorId: 1, errorCode: "NoError", status: "Available" });
+    }
+
+    function enviarStart() {
+        send("StartTransaction", { connectorId: 1, idTag: "RFID-TESTE", meterStart: 0, timestamp: new Date().toISOString() });
+    }
+
+    function enviarStop() {
+        send("StopTransaction", { meterStop: 1500, timestamp: new Date().toISOString(), transactionId: 1 });
+    }
+</script>
+
 </body>
 </html>
