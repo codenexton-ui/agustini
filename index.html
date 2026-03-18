@@ -2,98 +2,69 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador de Carregador OCPP 1.6J</title>
+    <title>Chat Instantâneo Peer-to-Peer</title>
+    <!-- Importa a biblioteca do Pusher -->
+    <script src="https://js.pusher.com"></script>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: #eee; padding: 20px; }
-        .card { background: #2a2a2a; border-radius: 8px; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #444; }
-        input { width: 70%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #555; background: #333; color: white; }
-        button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; margin: 2px; }
-        .btn-conn { background: #007bff; color: white; }
-        .btn-action { background: #28a745; color: white; }
-        #log { background: #000; color: #00ff00; padding: 10px; height: 250px; overflow-y: auto; margin-top: 20px; font-family: monospace; font-size: 12px; border: 1px solid #444; }
-        .status { margin-bottom: 15px; font-weight: bold; }
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        .chat-card { background: white; width: 350px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 500px; }
+        #messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .msg { padding: 8px 12px; border-radius: 15px; max-width: 80; font-size: 14px; }
+        .received { background: #e4e6eb; align-self: flex-start; }
+        .sent { background: #0084ff; color: white; align-self: flex-end; }
+        .input-area { padding: 15px; border-top: 1px solid #ddd; display: flex; gap: 5px; }
+        input { flex: 1; border: 1px solid #ddd; border-radius: 20px; padding: 8px 15px; outline: none; }
+        button { background: #0084ff; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Simulador de Carregador</h2>
-    
-    <div class="status">Status: <span id="connStatus" style="color: red;">Desconectado</span></div>
-
-    <input type="text" id="wsUrl" placeholder="ws://://seu-backend.com" value="wss://echo.websocket.org">
-    <button class="btn-conn" onclick="conectar()">Conectar</button>
-    
-    <hr style="border: 0.5px solid #444; margin: 20px 0;">
-
-    <div>
-        <button class="btn-action" onclick="enviarBoot()">BootNotification</button>
-        <button class="btn-action" onclick="enviarStatus()">StatusNotification (Available)</button>
-        <button class="btn-action" onclick="enviarStart()">StartTransaction</button>
-        <button class="btn-action" onclick="enviarStop()">StopTransaction</button>
+<div class="chat-card">
+    <div style="padding: 15px; border-bottom: 1px solid #ddd; font-weight: bold;">Chat em Tempo Real</div>
+    <div id="messages"></div>
+    <div class="input-area">
+        <input type="text" id="msgInput" placeholder="Digite uma mensagem...">
+        <button onclick="enviarMensagem()">></button>
     </div>
-
-    <div id="log"></div>
 </div>
 
 <script>
-    let ws = null;
-    const logDiv = document.getElementById('log');
+    // 1. CONFIGURAÇÃO (Pegue sua Key em pusher.com)
+    // Para teste rápido, você pode usar uma Key pública de exemplo se tiver, 
+    // mas o ideal é criar a sua (é grátis).
+    const PUSHER_KEY = 'SUA_APP_KEY_AQUI'; 
+    const cluster = 'sa1'; // ou seu cluster (ex: 'mt1')
 
-    function log(msg, type) {
-        const time = new Date().toLocaleTimeString();
-        const color = type === 'sent' ? '#00ff00' : '#00bfff';
-        logDiv.innerHTML += `<div style="color:${color}">[${time}] ${type.toUpperCase()}: ${msg}</div>`;
-        logDiv.scrollTop = logDiv.scrollHeight;
-    }
+    const pusher = new Pusher(PUSHER_KEY, { cluster: cluster });
+    const channel = pusher.subscribe('meu-chat-compartilhado');
 
-    function conectar() {
-        const url = document.getElementById('wsUrl').value;
-        // O sub-protocolo 'ocpp1.6' é obrigatório para a maioria dos backends
-        ws = new WebSocket(url, ['ocpp1.6']);
+    // 2. RECEBER MENSAGENS
+    channel.bind('nova-mensagem', function(data) {
+        const div = document.createElement('div');
+        div.className = 'msg received';
+        div.innerText = data.texto;
+        document.getElementById('messages').appendChild(div);
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    });
 
-        ws.onopen = () => {
-            document.getElementById('connStatus').innerText = "Conectado";
-            document.getElementById('connStatus').style.color = "lightgreen";
-            log("Conexão estabelecida com o servidor.", "info");
-        };
+    // 3. ENVIAR MENSAGENS
+    // Nota: O envio direto do Client -> Client no Pusher requer "Client Events" 
+    // ativado no painel ou uma função simples no backend.
+    function enviarMensagem() {
+        const input = document.getElementById('msgInput');
+        const texto = input.value;
+        if(!texto) return;
 
-        ws.onmessage = (msg) => log(msg.data, "recebido");
-        ws.onerror = (e) => log("Erro na conexão WebSocket", "erro");
-        ws.onclose = () => {
-            document.getElementById('connStatus').innerText = "Desconectado";
-            document.getElementById('connStatus').style.color = "red";
-        };
-    }
-
-    function send(action, payload) {
-        if(!ws || ws.readyState !== WebSocket.OPEN) return alert("Conecte ao servidor primeiro!");
+        // Adiciona na sua tela instantaneamente
+        const div = document.createElement('div');
+        div.className = 'msg sent';
+        div.innerText = texto;
+        document.getElementById('messages').appendChild(div);
         
-        // Estrutura Padrão OCPP: [MessageTypeId, MessageId, Action, Payload]
-        const msgId = Math.random().toString(36).substr(2, 9);
-        const call = JSON.stringify([2, msgId, action, payload]);
-        
-        ws.send(call);
-        log(call, "sent");
-    }
-
-    // Comandos OCPP 1.6
-    function enviarBoot() {
-        send("BootNotification", { chargePointVendor: "MinhaMarca", chargePointModel: "Modelo-HTML" });
-    }
-
-    function enviarStatus() {
-        send("StatusNotification", { connectorId: 1, errorCode: "NoError", status: "Available" });
-    }
-
-    function enviarStart() {
-        send("StartTransaction", { connectorId: 1, idTag: "RFID-TESTE", meterStart: 0, timestamp: new Date().toISOString() });
-    }
-
-    function enviarStop() {
-        send("StopTransaction", { meterStop: 1500, timestamp: new Date().toISOString(), transactionId: 1 });
+        // Dispara para os outros (Via API ou Client Event)
+        console.log("Mensagem enviada para o canal:", texto);
+        input.value = '';
     }
 </script>
-
 </body>
 </html>
